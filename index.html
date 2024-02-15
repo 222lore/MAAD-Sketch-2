@@ -8,28 +8,18 @@
   
   let time = 0
   let fires = []
+  let random_num = 10
+  let random_fires = []
   let fire2
   let canvas
   let ctx
   let size = 30
   
-  let dests = [
-    [0, 0], 
-    [0, nn.height], 
-    [nn.width, 0], 
-    [nn.width, nn.height],
-    [nn.width / 2, nn.height / 2],
-    [0, nn.height / 2], 
-    [nn.width / 2, 0], 
-    [nn.width / 2, nn.height],
-    [nn.width, nn.height / 2]
-  ]
-  
   function drawLine(x1, y1, x2, y2) {
     ctx.strokeStyle = 'white'
     ctx.beginPath()
-    ctx.moveTo(x1, y1)
-    ctx.lineTo(x2, y2)
+    ctx.moveTo(x1 + size / 2, y1 + size / 2)
+    ctx.lineTo(x2 + size / 2, y2 + size / 2)
     ctx.stroke()
     ctx.closePath()
   }
@@ -69,12 +59,40 @@
       fire.x = fire.x + Math.cos(time) * 2
       fire.y = fire.y + Math.sin(time) * 2
       
-      for (let j = 0; j < dests.length; j++) {
-        drawLine(fire.x + size / 2, fire.y + size / 2, dests[j][0], dests[j][1])
+      for (let j = 0; j < random_fires.length; j++) {
+        drawLine(fire.x, fire.y, random_fires[j].x1, random_fires[j].y1)
       }
       
       
       fire.img.css({ left: `${fire.x}px`, top: `${fire.y}px` })
+    }
+  }
+  
+  function createRandomFires() {
+    for (let i = 0; i < random_num; i++) {
+      let x1 = nn.random(size, nn.width - size)
+      let y1 = nn.random(size, nn.height - size)
+      let dx = nn.random(1, 3)
+      let dy = nn.random(1, 3)
+      let img = createFire(size, x1, y1)
+      random_fires.push({ img, x1, y1, dx, dy })
+    }
+  }
+  
+  function updateRandoms() {
+    for (let i = 0; i < random_fires.length; i++) {
+      let fire = random_fires[i]
+      
+      fire.x1 += fire.dx
+      fire.y1 += fire.dy
+      if (fire.x1 > nn.width - size / 2 || fire.x1 < size / 2) {
+        fire.dx = -fire.dx
+      }
+      if (fire.y1 > nn.height - size / 2 || fire.y1 < size / 2) {
+        fire.dy = -fire.dy
+      }
+      
+      fire.img.css({ left: `${fire.x1}px`, top: `${fire.y1}px` })
     }
   }
   
@@ -87,9 +105,7 @@
     
     createFireCircle(5, 100, nn.width / 2, nn.height / 4);
     
-    for (let i = 0; i < dests.length; i++) {
-      createFire(size, dests[i][0], dests[i][1])
-    }
+    createRandomFires()
     
     // fire2 = createFire(25, nn.width / 2, nn.height / 2);
   }
@@ -99,6 +115,7 @@
     ctx.fillRect(0, 0, nn.width, nn.height)
     
     moveFireCircle(time);
+    updateRandoms();
     
     // fire2.css({ left: `${0}px`, top: `${0}px` })
     time += 0.01

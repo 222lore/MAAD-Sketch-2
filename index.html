@@ -11,8 +11,21 @@
   let fire2
   let canvas
   let ctx
+  let size = 30
   
-  function drawLine (x1, y1, x2, y2) {
+  let dests = [
+    [0, 0], 
+    [0, nn.height], 
+    [nn.width, 0], 
+    [nn.width, nn.height],
+    [nn.width / 2, nn.height / 2],
+    [0, nn.height / 2], 
+    [nn.width / 2, 0], 
+    [nn.width / 2, nn.height],
+    [nn.width, nn.height / 2]
+  ]
+  
+  function drawLine(x1, y1, x2, y2) {
     ctx.strokeStyle = 'white'
     ctx.beginPath()
     ctx.moveTo(x1, y1)
@@ -30,8 +43,8 @@
       .css({
         'width': `${size}`,
         'position': 'absolute',
-        'left': `${x - size / 2}px`,
-        'top': `${y - size / 2}px`
+        'left': `${x}px`,
+        'top': `${y}px`
       })
       .addTo('body');
     
@@ -39,15 +52,13 @@
   }
   
   function createFireCircle(scale, r, cx, cy) {
-    const size = 25;
-    
     for (let i = 0; i < Math.PI * scale * 2; i++) {
       let x = cx + Math.cos(i * 1/scale) * r;
       let y = cy + Math.sin(i * 1/scale) * r;
       x = x - size / 2;
       y = y - size / 2;
       
-      let img = createFire(25, x, y);
+      let img = createFire(size, x, y);
       fires.push({ img, x, y });
     }
   }
@@ -55,10 +66,15 @@
   function moveFireCircle() {
     for (let i = 0; i < fires.length; i++) {
       let fire = fires[i]
-      const x = fire.x + Math.cos(time * 0.5) * 150
-      const y = fire.y + Math.sin(time) * 100
-            
-      fire.img.css({ left: `${x}px`, top: `${y}px` })
+      fire.x = fire.x + Math.cos(time) * 2
+      fire.y = fire.y + Math.sin(time) * 2
+      
+      for (let j = 0; j < dests.length; j++) {
+        drawLine(fire.x + size / 2, fire.y + size / 2, dests[j][0], dests[j][1])
+      }
+      
+      
+      fire.img.css({ left: `${fire.x}px`, top: `${fire.y}px` })
     }
   }
   
@@ -69,7 +85,12 @@
     canvas.height = nn.height
     ctx = canvas.getContext('2d')
     
-    createFireCircle(5, 100, nn.width / 2, nn.height / 2);
+    createFireCircle(5, 100, nn.width / 2, nn.height / 4);
+    
+    for (let i = 0; i < dests.length; i++) {
+      createFire(size, dests[i][0], dests[i][1])
+    }
+    
     // fire2 = createFire(25, nn.width / 2, nn.height / 2);
   }
   
@@ -78,7 +99,6 @@
     ctx.fillRect(0, 0, nn.width, nn.height)
     
     moveFireCircle(time);
-    drawFireLines();
     
     // fire2.css({ left: `${0}px`, top: `${0}px` })
     time += 0.01

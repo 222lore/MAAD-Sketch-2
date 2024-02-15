@@ -1,27 +1,23 @@
 <script src="https://cdn.jsdelivr.net/gh/netizenorg/netnet-standard-library/build/nn.min.js"></script>
 
-<!-- <img src="cd.gif"> -->
-<!-- <body></body> -->
-
 <script>
 /* global nn */
   
-  let time = 0
-  let fires = []
-  let random_num = 10
-  let random_fires = []
-  let fire2
-  let canvas
-  let ctx
-  let size = 30
+  let time = 0;
+  let fires = [];
+  let random_num = 10;
+  let random_fires = [];
+  let canvas;
+  let ctx;
+  let size = 30;
   
   function drawLine(x1, y1, x2, y2) {
-    ctx.strokeStyle = 'white'
-    ctx.beginPath()
-    ctx.moveTo(x1 + size / 2, y1 + size / 2)
-    ctx.lineTo(x2 + size / 2, y2 + size / 2)
-    ctx.stroke()
-    ctx.closePath()
+    ctx.strokeStyle = 'white';
+    ctx.beginPath();
+    ctx.moveTo(x1 + size / 2, y1 + size / 2);
+    ctx.lineTo(x2 + size / 2, y2 + size / 2);
+    ctx.stroke();
+    ctx.closePath();
   }
   
   function createFire(size, x, y) {
@@ -38,7 +34,7 @@
       })
       .addTo('body');
     
-    return img
+    return img;
   }
   
   function createFireCircle(scale, r, cx, cy) {
@@ -55,70 +51,66 @@
   
   function moveFireCircle() {
     for (let i = 0; i < fires.length; i++) {
-      let fire = fires[i]
-      fire.x = fire.x + Math.cos(time) * 2
-      fire.y = fire.y + Math.sin(time) * 2
+      let fire = fires[i];
+      fire.x = fire.x + Math.cos(time) * 2;
+      fire.y = fire.y + Math.sin(time) * 2;
       
       for (let j = 0; j < random_fires.length; j++) {
-        drawLine(fire.x, fire.y, random_fires[j].x1, random_fires[j].y1)
+        drawLine(fire.x, fire.y, random_fires[j].x1, random_fires[j].y1);
       }
       
       
-      fire.img.css({ left: `${fire.x}px`, top: `${fire.y}px` })
+      fire.img.css({ left: `${fire.x}px`, top: `${fire.y}px` });
     }
   }
   
   function createRandomFires() {
     for (let i = 0; i < random_num; i++) {
-      let x1 = nn.random(size, nn.width - size)
-      let y1 = nn.random(size, nn.height - size)
-      let dx = nn.random(1, 3)
-      let dy = nn.random(1, 3)
-      let img = createFire(size, x1, y1)
-      random_fires.push({ img, x1, y1, dx, dy })
+      let x1 = nn.random(size, nn.width - size);
+      let y1 = nn.random(size, nn.height - size);
+      let dx = nn.random(1, 3);
+      let dy = nn.random(1, 3);
+      let img = createFire(size, x1, y1);
+      random_fires.push({ img, x1, y1, dx, dy });
     }
   }
   
   function updateRandoms() {
     for (let i = 0; i < random_fires.length; i++) {
-      let fire = random_fires[i]
+      let fire = random_fires[i];
       
-      fire.x1 += fire.dx
-      fire.y1 += fire.dy
+      fire.x1 += fire.dx;
+      fire.y1 += fire.dy;
       if (fire.x1 > nn.width - size / 2 || fire.x1 < size / 2) {
-        fire.dx = -fire.dx
+        fire.dx = -fire.dx;
       }
       if (fire.y1 > nn.height - size / 2 || fire.y1 < size / 2) {
-        fire.dy = -fire.dy
+        fire.dy = -fire.dy;
       }
       
-      fire.img.css({ left: `${fire.x1}px`, top: `${fire.y1}px` })
+      fire.img.css({ left: `${fire.x1}px`, top: `${fire.y1}px` });
     }
   }
   
   function setup() {
-    nn.get('body').css({ margin: '0', height: '100vh' })
-    canvas = nn.create('canvas').addTo('body')
-    canvas.width = nn.width
-    canvas.height = nn.height
-    ctx = canvas.getContext('2d')
+    nn.get('body').css({ margin: '0', height: '100vh' });
+    canvas = nn.create('canvas').addTo('body');
+    canvas.width = nn.width;
+    canvas.height = nn.height;
+    ctx = canvas.getContext('2d');
     
     createFireCircle(5, 100, nn.width / 2, nn.height / 4);
-    
-    createRandomFires()
-    
-    // fire2 = createFire(25, nn.width / 2, nn.height / 2);
+    createRandomFires();
   }
   
   function draw () {
-    requestAnimationFrame(draw)
-    ctx.fillRect(0, 0, nn.width, nn.height)
+    requestAnimationFrame(draw);
+    ctx.fillRect(0, 0, nn.width, nn.height);
     
     moveFireCircle(time);
     updateRandoms();
     
-    // fire2.css({ left: `${0}px`, top: `${0}px` })
-    time += 0.01
+    time += 0.01;
   }
   
   nn.on('load', setup)

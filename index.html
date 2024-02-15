@@ -6,8 +6,10 @@
 <script>
 /* global nn */
   
+  let fires = []
+  
   function createFire(size, x, y) {
-    nn.create('img')
+    let img = nn.create('img')
       .set({ 
         src: 'fire_bg.gif', 
         alt: 'fire gif' 
@@ -19,21 +21,41 @@
         'top': `${y - size / 2}px`
       })
       .addTo('body');
+    
+    return img
   }
   
   function createFireCircle(scale, r, cx, cy) {
+    const size = 25;
+    
     for (let i = 0; i < Math.PI * scale * 2; i++) {
-      const x = cx + Math.cos(i * 1/scale) * r;
-      const y = cy + Math.sin(i * 1/scale) * r;
+      let x = cx + Math.cos(i * 1/scale) * r;
+      let y = cy + Math.sin(i * 1/scale) * r;
+      x = x - size / 2;
+      y = y - size / 2;
       
-      createFire(25, x, y);
+      let img = createFire(25, x, y);
+      fires.push({ img, x, y });
     }
   }
   
   function setup() {
     createFireCircle(20, 200, nn.width / 2, nn.height / 2);
-    // createFireCircle(0.25, nn.width() / 2, nn.height() / 2);
   }
+  
+  // function draw () {
+  //   requestAnimationFrame(draw)
+  //   const cy = nn.height / 2
+  //   const cx = nn.width / 2
+  //   const x = cx + Math.cos(time * 0.5) * 150
+  //   const y = cy + Math.sin(time) * 100
+    
+  //   for (let i = 0; i < fires.length; i++) {
+  //     fires[i].css({ left: `${x}px`, top: `${y}px` })
+  //   }
+    
+  //   time += 0.25
+  // }
   
   nn.on('load', setup)
 </script>

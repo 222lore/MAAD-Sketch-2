@@ -1,3 +1,9 @@
+<!-- Sketch 2 by Lorenzo Kwenda
+  For this sketch I wanted to play with generative images, using gifs and canvas.
+
+  Resources used: Some code examples that we went over in class
+-->
+
 <script src="https://cdn.jsdelivr.net/gh/netizenorg/netnet-standard-library/build/nn.min.js"></script>
 
 <script>
@@ -81,10 +87,10 @@
       
       fire.x1 += fire.dx;
       fire.y1 += fire.dy;
-      if (fire.x1 > nn.width - size / 2 || fire.x1 < size / 2) {
+      if (fire.x1 > nn.width - size || fire.x1 < size) {
         fire.dx = -fire.dx;
       }
-      if (fire.y1 > nn.height - size / 2 || fire.y1 < size / 2) {
+      if (fire.y1 > nn.height - size || fire.y1 < size) {
         fire.dy = -fire.dy;
       }
       
@@ -99,7 +105,7 @@
     canvas.height = nn.height;
     ctx = canvas.getContext('2d');
     
-    createFireCircle(5, 100, nn.width / 2, nn.height / 4);
+    createFireCircle(5, 100, nn.width / 2, nn.height / 5);
     createRandomFires();
   }
   

@@ -52,6 +52,16 @@
     }
   }
   
+  function moveFireCircle() {
+    for (let i = 0; i < fires.length; i++) {
+      let fire = fires[i]
+      const x = fire.x + Math.cos(time * 0.5) * 150
+      const y = fire.y + Math.sin(time) * 100
+            
+      fire.img.css({ left: `${x}px`, top: `${y}px` })
+    }
+  }
+  
   function setup() {
     nn.get('body').css({ margin: '0', height: '100vh' })
     canvas = nn.create('canvas').addTo('body')
@@ -65,13 +75,10 @@
   
   function draw () {
     requestAnimationFrame(draw)
+    ctx.fillRect(0, 0, nn.width, nn.height)
     
-    for (let i = 0; i < fires.length; i++) {
-      let fire = fires[i]
-      const x = fire.x + Math.cos(time * 0.5) * 150
-      const y = fire.y + Math.sin(time) * 100
-      fire.img.css({ left: `${x}px`, top: `${y}px` })
-    }
+    moveFireCircle(time);
+    drawFireLines();
     
     // fire2.css({ left: `${0}px`, top: `${0}px` })
     time += 0.01

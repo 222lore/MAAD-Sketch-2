@@ -6,10 +6,12 @@
 <script>
 /* global nn */
   
+  let time = 0
   let fires = []
+  let fire2
   
   function createFire(size, x, y) {
-    let img = nn.create('img')
+    const img = nn.create('img')
       .set({ 
         src: 'fire_bg.gif', 
         alt: 'fire gif' 
@@ -40,22 +42,25 @@
   }
   
   function setup() {
-    createFireCircle(20, 200, nn.width / 2, nn.height / 2);
+    createFireCircle(5, 100, nn.width / 2, nn.height / 2);
+    // fire2 = createFire(25, nn.width / 2, nn.height / 2);
   }
   
-  // function draw () {
-  //   requestAnimationFrame(draw)
-  //   const cy = nn.height / 2
-  //   const cx = nn.width / 2
-  //   const x = cx + Math.cos(time * 0.5) * 150
-  //   const y = cy + Math.sin(time) * 100
+  function draw () {
+    requestAnimationFrame(draw)
     
-  //   for (let i = 0; i < fires.length; i++) {
-  //     fires[i].css({ left: `${x}px`, top: `${y}px` })
-  //   }
+    for (let i = 0; i < fires.length; i++) {
+      let fire = fires[i]
+      const x = fire.x + Math.cos(time * 0.5) * 150
+      const y = fire.y + Math.sin(time) * 100
+      fire.img.css({ left: `${x}px`, top: `${y}px` })
+    }
     
-  //   time += 0.25
-  // }
+    // fire2.css({ left: `${0}px`, top: `${0}px` })
+    time += 0.01
+  }
   
   nn.on('load', setup)
+  nn.on('load', draw)
+  
 </script>
